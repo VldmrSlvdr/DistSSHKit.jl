@@ -20,6 +20,11 @@ Releases through 0.9.0 are in [HISTORY.md](HISTORY.md).
   `KitSession` `yes=true` is outside this change. `setup!(session, :delete)`
   and `setup!(session, :prune)` without `confirm_path` still follow `session.yes`.
 
+## 0.10.5
+
+- Requires DistSSHRun 0.1.14 and DistSSHQueue 0.9.8.
+- The manual distinguishes `add-host` and `pool`, which compare a worker with serve's Julia, from `setup --check`, which warns on a patch or a prerelease and returns those warnings from `setup!`. It also describes the `submit`, `status`, and `qhost:` `fetch` lines DistSSHQueue 0.9.8 already prints.
+
 ## 0.10.4
 
 - A name that DistSSHRun or DistSSHQueue marks public, and does not export, is not reexported. `rsync_send_list` stays reexported until 0.11. The current export set is unchanged.
