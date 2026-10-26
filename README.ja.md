@@ -1,6 +1,18 @@
-# DistSSHKit.jl
+<!-- markdownlint-disable MD033 MD013 MD041 -->
+<p align="center">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="docs/src/assets/social/readme-dark-static.png">
+    <img
+      src="docs/src/assets/social/readme-static.png"
+      width="640"
+      alt="DistSSHKit。複数のマシンへ SSH して Julia の計算を実行するツールキット。">
+  </picture>
+</p>
+<!-- markdownlint-enable MD033 MD013 MD041 -->
 
-[English](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
+[English](README.md) · [日本語](README.ja.md) · [简体中文](README.zh.md)
 
 <!-- markdownlint-disable MD013 -->
 [![Test](https://img.shields.io/github/actions/workflow/status/yamanori99/DistSSHKit.jl/CI.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white&label=Test)](https://github.com/yamanori99/DistSSHKit.jl/actions/workflows/CI.yml)
@@ -12,6 +24,8 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 [![Discussions](https://img.shields.io/badge/GitHub-Discussions-blueviolet?style=flat-square&logo=github)](https://github.com/yamanori99/DistSSHKit.jl/discussions)
 <!-- markdownlint-enable MD013 -->
+
+## DistSSHKit
 
 DistSSHKit は、複数のマシンへ SSH して Julia の計算を実行するツールキットである。
 ワークステーション 2 台でも、研究室のより多くのマシンでも、同じように使える。
@@ -78,13 +92,13 @@ git によるデプロイを使う場合は、さらに **`git`** も必要と�
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/diagram/topology-dark.svg">
+      srcset="docs/src/assets/diagram/topology-dark.svg">
     <source
       media="(prefers-color-scheme: light)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/diagram/topology.svg">
+      srcset="docs/src/assets/diagram/topology.svg">
     <img
       alt="Drive topology: master and workers"
-      src="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/diagram/topology.png">
+      src="docs/src/assets/diagram/topology.png">
   </picture>
 </p>
 <!-- markdownlint-enable MD033 MD013 -->
@@ -144,6 +158,7 @@ go 単体でも十分に実用的である。まず go で単独実行を確認�
 
 - **CLI** — ターミナルからコマンドとして直接実行する方法。
   例: `julia --project=. -m DistSSHKit go child:user@host1:1 script.jl`。
+  フラグは `julia -m DistSSHKit help go` で開く。
   手早く試したい場合や、シェルスクリプトに組み込みたい場合に向いている
 - **Julia** — 自作の Julia コード (スクリプト、REPL、他のパッケージなど) の中から関数として呼び出す方法。
   `setup!`、`go!`、`plan`、`pool!`、`drive!` などの関数を用いる (`plan` には bang が付かない)
@@ -386,13 +401,7 @@ julia --project=. -m DistSSHKit qhost:HOST submit go parent:1 distsshkit_demos/w
 
 ## ライセンス
 
-ソースコードは [MIT](LICENSE) ライセンスである。ロゴと図に含まれる Julia のドットは
-Copyright (c) 2012-2022 Stefan Karpinski によるもので、
-[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-のもとで提供されている。
-DistSSHKit では、これを改変して使用している。
-詳細は [LICENSE](LICENSE) と
-[julia-logo-graphics](https://github.com/JuliaLang/julia-logo-graphics) を参照されたい。
+ソースコードは [MIT](LICENSE) ライセンスである。
 
 <!-- markdownlint-disable MD013 -->
 [home]: https://yamanori99.github.io/DistSSHKit.jl/stable/
@@ -425,20 +434,3 @@ DistSSHKit では、これを改変して使用している。
 [run]: https://yamanori99.github.io/DistSSHRun.jl/stable/
 [queue]: https://yamanori99.github.io/DistSSHQueue.jl/stable/
 <!-- markdownlint-enable MD013 -->
-
-<!-- markdownlint-disable MD033 MD013 -->
-<p align="center">
-  <picture>
-    <source
-      media="(prefers-color-scheme: dark)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/logo/logo-dark-static.svg">
-    <source
-      media="(prefers-color-scheme: light)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/logo/logo-static.svg">
-    <img
-      src="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/logo/logo-static.png"
-      width="180"
-      alt="DistSSHKit.jl logo"/>
-  </picture>
-</p>
-<!-- markdownlint-enable MD033 MD013 -->

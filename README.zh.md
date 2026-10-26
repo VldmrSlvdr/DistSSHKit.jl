@@ -1,4 +1,16 @@
-# DistSSHKit.jl
+<!-- markdownlint-disable MD033 MD013 MD041 -->
+<p align="center">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="docs/src/assets/social/readme-dark-static.png">
+    <img
+      src="docs/src/assets/social/readme-static.png"
+      width="640"
+      alt="DistSSHKit。通过 SSH 在多台机器上运行 Julia 计算的工具包。">
+  </picture>
+</p>
+<!-- markdownlint-enable MD033 MD013 MD041 -->
 
 [English](README.md) | [日本語](README.ja.md) | [简体中文](README.zh.md)
 
@@ -13,26 +25,28 @@
 [![Discussions](https://img.shields.io/badge/GitHub-Discussions-blueviolet?style=flat-square&logo=github)](https://github.com/yamanori99/DistSSHKit.jl/discussions)
 <!-- markdownlint-enable MD013 -->
 
-DistSSHKit 是一个通过 SSH 在多台机器上并行 Julia 计算的工具包。
-它不仅适用于两台工作站的工作环境，也能支持实验室环境下的多机器计算场景。
-现支持 **macOS、Linux 和 WSL2 Ubuntu**（暂不支持原生 Windows）。
+## DistSSHKit
 
-安装只需 `pkg> add DistSSHKit`。运行指令是 `julia -m DistSSHKit`。
+DistSSHKit 是一个通过 SSH 在多台机器上运行 Julia 计算的工具包。
+两台工作站和更多的实验室机器，用法相同。
+支持的平台是 **macOS、Linux 和 WSL2 Ubuntu**（不支持原生 Windows）。
+
+安装只需一次 `pkg> add DistSSHKit`。命令是 `julia -m DistSSHKit`。
 DistSSHKit 捆绑了 DistSSHRun 和 DistSSHQueue。
-因此不需要单独安装它们。
+不必单独安装它们。
 
-任务可在如下两个场景之一运行。
+任务在下面两处之一运行。
 
 - **本机。** 在本机启动任务。SSH 连接保持打开，直到任务结束。
-  指令是 `go`、`ride`、`drive`、`plan`、
+  命令是 `go`、`ride`、`drive`、`plan`、
   `size`、`pool`、`demo` 和 `progress`。
-- **队列主机。** 一台始终运行的服务器。把任务留在那里。任务一次运行一个。
-  需在服务器上安装同一个包。笔记本掉线不会停止已经留在那里的任务。
-  指令是 `submit`、`status`、`watch`、`cancel`、`fetch` 和 `serve`。
-  本工具使用`qhost` 来指代服务器。
+- **队列主机。** 一台始终开着的机器。把任务留在那里。任务一次运行一个。
+  在那台机器上安装同一个包。笔记本掉线不会停掉已经留在那里的任务。
+  命令是 `submit`、`status`、`watch`、`cancel`、`fetch` 和 `serve`。
+  `qhost` 指那台机器。
 
-**通道服务器**是两者共用的。`setup` 准备 SSH 主机。`up` 让每台机器使用相同的 Julia 通道。
-需要在任一场所开始之前做这件事。
+**准备主机**是共用的。`setup` 准备 SSH 主机。`up` 让每台机器使用相同的 Julia 通道。
+在任一处开始之前先做这件事。
 
 ## 安装
 
@@ -42,7 +56,7 @@ DistSSHKit 捆绑了 DistSSHRun 和 DistSSHQueue。
 pkg> add DistSSHKit
 ```
 
-或者使用 `Pkg` API：
+或者，等价地使用 `Pkg` API：
 
 ```julia
 julia> import Pkg; Pkg.add("DistSSHKit")
@@ -57,9 +71,9 @@ julia> import Pkg; Pkg.add("DistSSHKit")
 
 ## 使用方法
 
-### 用语解释
+### 基本术语
 
-- **主机（Host）** — 执行计算的机器。使用 token 指定，
+- **主机（Host）** — 执行计算的机器。用 token 指定，
   例如 `parent` 或 `child:user@hostname`。
 - **进程（Process）** — 一个正在运行的 `julia` 实例。每个进程有自己的
   内存，并在操作系统层面上独立运行。
@@ -68,7 +82,7 @@ julia> import Pkg; Pkg.add("DistSSHKit")
 - **主进程（Master）** — 运行开始所在机器上的进程。使用 `go` 时，
   它规划槽位；使用 `drive` 时，它把工作交给工作进程并
   收集结果。在本机运行 `go` /
-  `drive` 时，那台机器就是本机；任务被留在队列服务器上时，那台服务器就是队列主机。
+  `drive` 时，那台机器就是本机；任务被留在队列主机上时，就是队列主机。
 - **工作进程（Worker）** — 从主进程接收工作并执行的进程。
 
 例如，如果你在自己的机器上运行 `go` 或 `drive`，那台机器就是
@@ -81,26 +95,26 @@ julia> import Pkg; Pkg.add("DistSSHKit")
   <picture>
     <source
       media="(prefers-color-scheme: dark)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/diagram/topology-dark.svg">
+      srcset="docs/src/assets/diagram/topology-dark.svg">
     <source
       media="(prefers-color-scheme: light)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/diagram/topology.svg">
+      srcset="docs/src/assets/diagram/topology.svg">
     <img
       alt="Drive 拓扑：主进程与工作进程"
-      src="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/diagram/topology.png">
+      src="docs/src/assets/diagram/topology.png">
   </picture>
 </p>
 <!-- markdownlint-enable MD033 MD013 -->
 
-上图表示的是 **drive**：本机上有一个主进程，每台主机上都有工作进程。
+上图是 **drive**：本机上有一个主进程，每台主机上都有工作进程。
 **go** 使用相同的主机 token，但没有主进程/工作进程
 关系；每台主机各自运行脚本。
 
 ```text
 parent                 # 本机
-parent:2               # 本机上有两个进程
-child:user@hostname    # SSH 子机（user@host、IP 或 Host 别名）
-child:user@hostname:4  # 该子机上有四个进程
+parent:2               # 本机上两个
+child:user@hostname    # SSH child（user@host、IP 或 Host 别名）
+child:user@hostname:4  # 该 child 上四个
 ```
 
 SSH 主机的数量没有上限。主机越多，花在
@@ -119,38 +133,38 @@ SSH 连接和部署上的时间也越多，所以最好先从几台开始，再�
 
 运行脚本有三种方式：
 
-- **go** — 每台主机全程运行你的 `.jl` 文件。
+- **go** — 每台主机把你的 `.jl` 文件从头到尾运行一遍。
 - **ride** — DistSSHKit 拆分相互独立的 `map`、filter、推导式或
   带下标的 `for` 工作（实验性功能；可在 parent 或 SSH 工作进程上使用）。
-- **drive** — 一个主进程把工作分发给各个工作进程（基于 Distributed.jl）。
+- **drive** — 一个主进程把工作分发给工作进程（基于 Distributed.jl）。
 
 ### 检查：plan（文件）与 pool（主机）
 
 - **plan** — 检查一个 `.jl` 文件，并建议使用 go、ride 或 drive。它只
-  从磁盘读取并解析，因此不带 `!`，也不进行 SSH。也可以调用 `size!`
-  估算槽位。
+  从磁盘读取并解析，因此没有 bang，也不做 SSH。可选的槽位估算可以调用
+  `size!`。
 - **pool** / **pool!** — 报告所列主机的核心数和内存。它使用
-  SSH，因此带 `!`。它不报告 RSS。无法连接的主机仍留在
+  SSH，因此带 bang。它不报告 RSS。无法连接的主机仍留在
   列表中，并标记 `ok=false`。
 
 **size** / **size!** 报告占用情况（基于 RSS 的 `WorkerPlan`）。CLI
 的 `size` 会打印一份计划。对于 go、drive 和 ride，列出的每个 token 都需要 `:N`
 （不给 token 时，会在 parent 上得到一个槽位）。
 `go --repeat` 是例外：列出的主机可以省略 `:N`，
-这样它们的资源池就没有上限。这些都
-不是监控面板，不会持续刷新检测。
+这样它们的 pool 就没有上限。这些都不是仪表板。
 
-单独使用 `go` 已经相当可用。常见流程是先用 `go` 确认一次独立
-运行，需要时再转向 `drive` 和 Distributed.jl。
-`plan` 后也建议直接使用 `ride`。
+单独使用 `go` 已经相当有用。常见做法是先用 `go` 确认一次独立
+运行，需要时再转到 `drive` 和 Distributed.jl。
+`plan` 甚至可能马上建议使用 `ride`。
 
 ### 调用 DistSSHKit 的方式
 
 - **CLI** — 从终端运行 DistSSHKit。
   示例：`julia --project=. -m DistSSHKit go child:user@host1:1 script.jl`。
+  命令标志：`julia -m DistSSHKit help go`。
   适合快速试验和 shell 脚本。
 - **Julia** — 从你自己的 Julia 代码（脚本、REPL 或
-  另一个包）中调用函数：`setup!`、`go!`、`drive!`、`plan`（不带 `!`）、`pool!`，以及
+  另一个包）中调用函数：`setup!`、`go!`、`drive!`、`plan`（没有 bang）、`pool!`，以及
   其他带 `!` 的函数。
 
 CLI 标志与 Julia API 一一对应。例如，`setup --rsync`
@@ -167,7 +181,7 @@ CLI 标志与 Julia API 一一对应。例如，`setup --rsync`
 通常在运行脚本之前先运行 `setup`。它部署项目并安装
 依赖。每次调用只指定一个部署或初始化操作。远程为空
 或不存在时，`go --rsync` 或 `drive --rsync` 可以一步完成项目复制和
-实例化（普通的 `go` 和 `drive` 仍然假定远程主机
+实例化（普通的 `go` 和 `drive` 仍然假定远程
 已经准备好）。
 
 - 首次部署：使用 `--rsync`（按原样发送本地目录树）或
@@ -183,14 +197,14 @@ CLI 标志与 Julia API 一一对应。例如，`setup --rsync`
   - `--delete`（删除远程项目目录；破坏性操作）
 
 `--rsync`、`--clone`、`--sync`、`--pull`、`up` 和 `up update` 在运行前会
-要求确认。传入 `-y` 或 `--yes` 可以非交互运行这些操作，
+要求确认。传入 `-y` 或 `--yes` 可以非交互地运行这些操作，
 例如从脚本中运行。`--delete` 和 `--prune`
 会要求输入 `delete` 或 `prune`。`-y` 和 `DISTSSHKIT_YES` 仍会跳过该
-提示并执行删除。这一跳过行为将在 DistSSHKit 0.11（DistSSHRun 0.2）中停止。
+提示并执行删除。这一跳过行为在 DistSSHKit 0.11（DistSSHRun 0.2）停止。
 此后保留的方式是传入 `--confirm-path`。
 没有 `--confirm-path` 的 `teardown` 会打印 `Would remove`
 并且不删除任何内容，除非设置了 `-y` 或 `DISTSSHKIT_YES`。这一跳过
-行为将在 DistSSHKit 0.11（DistSSHQueue 0.10）中停止。
+行为在 DistSSHKit 0.11（DistSSHQueue 0.10）停止。
 
 详情见
 [setup](https://yamanori99.github.io/DistSSHKit.jl/stable/manual/setup/)。
@@ -198,14 +212,14 @@ CLI 标志与 Julia API 一一对应。例如，`setup --rsync`
 > [!NOTE]
 > **不确定用 rsync 还是 git？**
 >
-> - **`--rsync`** — 直接按原样发送本地文件。远程主机不
+> - **`--rsync`** — 直接按原样发送本地文件。远程不
 >   需要 git。适合第一次尝试或一次性运行。
 > - **`--clone` 然后 `--sync`** — 把远程当作 git 仓库来管理。如果会
 >   持续更新代码，或者希望
 >   `drive --require-git` 确认远程 commit 与本地
 >   一致以保证可复现，这种方式更好。
 
-首次设置（rsync 路线）如下：
+首次设置（rsync 路线）通常如下：
 
 ```bash
 # 把文件复制过去
@@ -216,7 +230,7 @@ julia --project=. -m DistSSHKit setup --instantiate child:user@host1 child:user@
 julia --project=. -m DistSSHKit setup --check child:user@host1 child:user@host2
 ```
 
-其他常用命令：
+其他顺手的命令：
 
 ```bash
 # 删除 go/drive/setup/runs 叶子项（保留项目树）
@@ -231,7 +245,7 @@ julia --project=. -m DistSSHKit setup --delete child:user@host1 child:user@host2
 
 设置完成后，按如下方式运行脚本。
 
-**CLI，go。** 每个槽位会把 `script.jl` 从头到尾运行一次。
+**CLI，go。** 每个槽位把 `script.jl` 从头到尾运行一次。
 `child:user@host:1` 表示在该主机上运行一次，`parent:N` 表示在
 本机上运行 N 次。`--repeat N` 表示总共运行 N 次，分摊到列出的
 主机上。
@@ -278,8 +292,8 @@ setup!(session, :sync)  # 之后的更新
 ```
 
 `pipeline!` 是一个可选的便利函数，把 sync、`drive!` 和 collect
-串成一次调用。它不运行 `setup!`，并且其中的 `sync=:rsync` 只复制文件，
-不执行实例化。请事先准备好远程主机，或使用
+串成一次调用。它不运行 `setup!`，并且它的 `sync=:rsync` 只复制文件，
+不执行实例化。请事先准备好远程，或使用
 `drive!(…; sync=:rsync)`。
 详情见 [API](https://yamanori99.github.io/DistSSHKit.jl/stable/api/)。
 
@@ -322,8 +336,8 @@ julia --project=. -m DistSSHKit go parent:2 distsshkit_demos/without_kit/pi_file
 
 **队列主机。** 登录那台始终开着的 macOS 或 Linux 机器，并用
 `pkg> add DistSSHKit` 在那里安装同一个包。在队列主机上运行的每条命令
-都需以 `qhost` 开头，如若使用`qhost:HOST` 这种 token 会被拒绝。
-请使用默认的 Julia 环境，所以无需传递 `--project=.`：
+都以单词 `qhost` 开头，`qhost:HOST` 这种 token 会被拒绝。
+默认的 Julia 环境就够了，所以不要传 `--project=.`：
 
 ```bash
 julia -m DistSSHKit qhost setup
@@ -331,7 +345,7 @@ julia -m DistSSHKit qhost add-host parent child:host1
 julia -m DistSSHKit qhost serve
 ```
 
-`qhost enable` 会让 `serve` 在重启后再次启动。
+`qhost enable` 会让 `serve` 在重启后再启动。
 
 **客户端。** 留在存放任务的那台机器上。`qhost:HOST` 是队列主机的 SSH 名称，
 把它放在 `submit`、`status`、`fetch` 和 `cancel` 前面。
@@ -383,7 +397,7 @@ julia --project=. -m DistSSHKit qhost:HOST submit go parent:1 distsshkit_demos/w
     - [serve][q-serve]
     - [qhost setup][q-setup]
 - [API][api]
-- 更新记录：[NEWS.md](NEWS.md)。至 0.9.0：[HISTORY.md](HISTORY.md)。
+- News: [NEWS.md](NEWS.md)。至 0.9.0：[HISTORY.md](HISTORY.md)。
 
 ## 包
 
@@ -403,13 +417,7 @@ julia --project=. -m DistSSHKit qhost:HOST submit go parent:1 distsshkit_demos/w
 
 ## 许可证
 
-源代码以 [MIT](LICENSE) 许可证发布。项目标志和示意图中的 Julia 圆点
-版权为 Copyright (c) 2012-2022 Stefan Karpinski，
-许可协议为
-[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)。
-DistSSHKit 使用了它们的改编版本。详情见
-[LICENSE](LICENSE) 和
-[julia-logo-graphics](https://github.com/JuliaLang/julia-logo-graphics)。
+源代码以 [MIT](LICENSE) 许可证发布。
 
 <!-- markdownlint-disable MD013 -->
 [home]: https://yamanori99.github.io/DistSSHKit.jl/stable/
@@ -442,20 +450,3 @@ DistSSHKit 使用了它们的改编版本。详情见
 [run]: https://yamanori99.github.io/DistSSHRun.jl/stable/
 [queue]: https://yamanori99.github.io/DistSSHQueue.jl/stable/
 <!-- markdownlint-enable MD013 -->
-
-<!-- markdownlint-disable MD033 MD013 -->
-<p align="center">
-  <picture>
-    <source
-      media="(prefers-color-scheme: dark)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/logo/logo-dark-static.svg">
-    <source
-      media="(prefers-color-scheme: light)"
-      srcset="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/logo/logo-static.svg">
-    <img
-      src="https://raw.githubusercontent.com/yamanori99/DistSSHKit.jl/main/docs/src/assets/logo/logo-static.png"
-      width="180"
-      alt="DistSSHKit.jl 标志"/>
-  </picture>
-</p>
-<!-- markdownlint-enable MD033 MD013 -->
